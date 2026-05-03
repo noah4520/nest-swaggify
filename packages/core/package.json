@@ -1,0 +1,62 @@
+{
+  "name": "nest-swaggify",
+  "version": "0.0.1",
+  "description": "NestJS Swagger groups - Group-based Swagger documentation generator",
+  "keywords": [
+    "documentation",
+    "filter",
+    "groups",
+    "nest",
+    "nestjs",
+    "openapi",
+    "split",
+    "swagger"
+  ],
+  "homepage": "https://github.com/noah4520/nest-swaggify#readme",
+  "bugs": {
+    "url": "https://github.com/noah4520/nest-swaggify/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Noah Chen",
+    "url": "https://github.com/noah4520"
+  },
+  "contributors": [
+    {
+      "name": "Alex",
+      "url": "https://github.com/achen224"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/noah4520/nest-swaggify.git",
+    "directory": "packages/core"
+  },
+  "bin": {
+    "generate-swagger": "dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && chmod +x dist/cli/index.js",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^11.1.17",
+    "@nestjs/core": "^11.1.17",
+    "@nestjs/swagger": "^11.2.6",
+    "reflect-metadata": "^0.2.2"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0 || ^11.0.0",
+    "@nestjs/core": "^10.0.0 || ^11.0.0",
+    "@nestjs/swagger": "^11.0.0",
+    "reflect-metadata": "^0.2.0"
+  }
+}

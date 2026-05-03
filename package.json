@@ -1,0 +1,44 @@
+{
+  "name": "nest-swaggify",
+  "version": "0.0.1",
+  "private": true,
+  "description": "NestJS Group-based Swagger documentation generator",
+  "license": "MIT",
+  "author": {
+    "name": "Noah Chen",
+    "url": "https://github.com/noah4520"
+  },
+  "contributors": [
+    {
+      "name": "Alex.",
+      "url": "https://github.com/achen224"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/noah4520/nest-swaggify.git"
+  },
+  "scripts": {
+    "test": "pnpm --filter nest-swaggify test",
+    "build": "pnpm -r build",
+    "clean": "pnpm -r clean",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check .",
+    "typecheck": "tsc -p packages/core/tsconfig.json --noEmit",
+    "build:core": "pnpm --filter nest-swaggify build",
+    "dev:playground": "pnpm --filter playground dev",
+    "swagger": "pnpm --filter playground swagger",
+    "swagger:all": "pnpm --filter playground swagger:all",
+    "swagger:public": "pnpm --filter playground swagger:public",
+    "swagger:internal": "pnpm --filter playground swagger:internal"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.0",
+    "oxfmt": "^0.44.0",
+    "oxlint": "^1.59.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.4"
+  }
+}
