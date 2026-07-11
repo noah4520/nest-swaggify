@@ -1,5 +1,5 @@
 {
-  "name": "nest-swaggify",
+  "name": "nest-swaggify-workspace",
   "version": "0.0.1",
   "private": true,
   "description": "NestJS Group-based Swagger documentation generator",
@@ -21,7 +21,7 @@
   "scripts": {
     "test": "pnpm --filter nest-swaggify test",
     "build": "pnpm -r build",
-    "clean": "pnpm -r clean",
+    "clean": "pnpm -r run clean",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt .",
