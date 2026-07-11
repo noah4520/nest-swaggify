@@ -501,6 +501,209 @@ describe("collectAllGroups", () => {
     });
   });
 
+  it("throws when the Nest container is not accessible", () => {
+    const appWithoutContainer = {} as unknown as INestApplication;
+    const doc = makeDocument({ "/users": { get: {} } });
+
+    expect(() => collectAllGroups(appWithoutContainer, doc)).toThrowError(
+      /Unable to access the Nest application's module container/,
+    );
+  });
+
+  describe("path resolution against the generated document", () => {
+    it("matches routes behind a global prefix (setGlobalPrefix)", () => {
+      @Controller("users")
+      @SwaggerInclude("public-api")
+      class UsersController {
+        @Get(":id")
+        find() {}
+      }
+
+      const doc = makeDocument({ "/api/users/{id}": { get: {} } });
+
+      const meta = collectAllGroups(makeApp([UsersController]), doc);
+      const filtered = filterDocumentByGroupWithMetadata(doc, meta, "public-api");
+
+      expect(filtered.paths["/api/users/{id}"]).toBeDefined();
+    });
+
+    it("disambiguates URI-versioned routes via @Controller({ version })", () => {
+      @Controller({ path: "users", version: "1" })
+      @SwaggerInclude("public-api")
+      class UsersV1Controller {
+        @Get()
+        list() {}
+      }
+
+      @Controller({ path: "users", version: "2" })
+      @SwaggerInclude("internal-api")
+      class UsersV2Controller {
+        @Get()
+        list() {}
+      }
+
+      const doc = makeDocument({
+        "/v1/users": { get: {} },
+        "/v2/users": { get: {} },
+      });
+
+      const meta = collectAllGroups(makeApp([UsersV1Controller, UsersV2Controller]), doc);
+
+      const publicDoc = filterDocumentByGroupWithMetadata(doc, meta, "public-api");
+      expect(publicDoc.paths["/v1/users"]).toBeDefined();
+      expect(publicDoc.paths["/v2/users"]).toBeUndefined();
+
+      const internalDoc = filterDocumentByGroupWithMetadata(doc, meta, "internal-api");
+      expect(internalDoc.paths["/v2/users"]).toBeDefined();
+      expect(internalDoc.paths["/v1/users"]).toBeUndefined();
+    });
+
+    it("applies metadata to every documented version of a multi-version route", () => {
+      @Controller({ path: "users", version: ["1", "2"] })
+      @SwaggerInclude("public-api")
+      class UsersController {
+        @Get()
+        list() {}
+      }
+
+      const doc = makeDocument({
+        "/v1/users": { get: {} },
+        "/v2/users": { get: {} },
+      });
+
+      const meta = collectAllGroups(makeApp([UsersController]), doc);
+      const filtered = filterDocumentByGroupWithMetadata(doc, meta, "public-api");
+
+      expect(filtered.paths["/v1/users"]).toBeDefined();
+      expect(filtered.paths["/v2/users"]).toBeDefined();
+    });
+
+    it("prefers the shortest prefix when multiple prefixed paths share a suffix", () => {
+      @Controller("users")
+      @SwaggerInclude("public-api")
+      class UsersController {
+        @Get(":id")
+        find() {}
+      }
+
+      @Controller("admin/users")
+      @SwaggerInclude("internal-api")
+      class AdminUsersController {
+        @Get(":id")
+        find() {}
+      }
+
+      const doc = makeDocument({
+        "/api/users/{id}": { get: {} },
+        "/api/admin/users/{id}": { get: {} },
+      });
+
+      const meta = collectAllGroups(makeApp([UsersController, AdminUsersController]), doc);
+
+      const publicDoc = filterDocumentByGroupWithMetadata(doc, meta, "public-api");
+      expect(publicDoc.paths["/api/users/{id}"]).toBeDefined();
+      expect(publicDoc.paths["/api/admin/users/{id}"]).toBeUndefined();
+
+      const internalDoc = filterDocumentByGroupWithMetadata(doc, meta, "internal-api");
+      expect(internalDoc.paths["/api/admin/users/{id}"]).toBeDefined();
+      expect(internalDoc.paths["/api/users/{id}"]).toBeUndefined();
+    });
+
+    it("only documents the first entry of an array controller path, like @nestjs/swagger", () => {
+      @Controller(["primary", "alias"])
+      @SwaggerInclude("public-api")
+      class AliasedController {
+        @Get()
+        list() {}
+      }
+
+      const doc = makeDocument({ "/primary": { get: {} } });
+
+      const meta = collectAllGroups(makeApp([AliasedController]), doc);
+      const filtered = filterDocumentByGroupWithMetadata(doc, meta, "public-api");
+
+      expect(filtered.paths["/primary"]).toBeDefined();
+    });
+
+    it("converts named wildcards and optional params to OpenAPI placeholders", () => {
+      @Controller("files")
+      @SwaggerInclude("public-api")
+      class FilesController {
+        @Get("*splat")
+        catchAll() {}
+
+        @Get("by-id/:id?")
+        byId() {}
+      }
+
+      const doc = makeDocument({
+        "/files/{splat}": { get: {} },
+        "/files/by-id/{id}": { get: {} },
+      });
+
+      const meta = collectAllGroups(makeApp([FilesController]), doc);
+      const filtered = filterDocumentByGroupWithMetadata(doc, meta, "public-api");
+
+      expect(filtered.paths["/files/{splat}"]).toBeDefined();
+      expect(filtered.paths["/files/by-id/{id}"]).toBeDefined();
+    });
+  });
+
+  it("picks up routes inherited from a base controller class", () => {
+    class BaseCrudController {
+      @Get()
+      list() {}
+
+      @SwaggerIncludeOnly("internal-api")
+      @Delete("purge")
+      purge() {}
+    }
+
+    @Controller("widgets")
+    @SwaggerInclude("public-api")
+    class WidgetsController extends BaseCrudController {}
+
+    const doc = makeDocument({
+      "/widgets": { get: {} },
+      "/widgets/purge": { delete: {} },
+    });
+
+    const meta = collectAllGroups(makeApp([WidgetsController]), doc);
+
+    const publicDoc = filterDocumentByGroupWithMetadata(doc, meta, "public-api");
+    expect(publicDoc.paths["/widgets"]).toBeDefined();
+    expect(publicDoc.paths["/widgets/purge"]).toBeUndefined();
+
+    const internalDoc = filterDocumentByGroupWithMetadata(doc, meta, "internal-api");
+    expect(internalDoc.paths["/widgets/purge"]).toBeDefined();
+  });
+
+  it("an overriding method in the subclass wins over the inherited one", () => {
+    class BaseController {
+      @SwaggerIncludeOnly("internal-api")
+      @Get()
+      list() {}
+    }
+
+    @Controller("gadgets")
+    class GadgetsController extends BaseController {
+      @SwaggerInclude("public-api")
+      @Get()
+      override list() {}
+    }
+
+    const doc = makeDocument({ "/gadgets": { get: {} } });
+
+    const meta = collectAllGroups(makeApp([GadgetsController]), doc);
+
+    expect(
+      filterDocumentByGroupWithMetadata(doc, meta, "public-api").paths["/gadgets"],
+    ).toBeDefined();
+    expect(
+      filterDocumentByGroupWithMetadata(doc, meta, "internal-api").paths["/gadgets"],
+    ).toBeUndefined();
+  });
+
   it("ignores prototype members that are not route handlers", () => {
     @Controller("things")
     @SwaggerInclude("public-api")
