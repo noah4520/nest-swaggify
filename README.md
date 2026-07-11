@@ -1,5 +1,9 @@
 # Nest Swaggify
 
+[![CI](https://github.com/noah4520/nest-swaggify/actions/workflows/ci.yml/badge.svg)](https://github.com/noah4520/nest-swaggify/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/nest-swaggify)](https://www.npmjs.com/package/nest-swaggify)
+[![license](https://img.shields.io/github/license/noah4520/nest-swaggify)](LICENSE)
+
 **English** | [繁體中文](README.zh-TW.md)
 
 A NestJS Swagger extension — split one API spec into multiple group-scoped docs via decorators, with runtime switching and static JSON output.
@@ -175,6 +179,10 @@ export default config;
 | `group`       | `string[] \| "all"`  | Which groups to generate. Omit for full doc + every group; `"all"` for full doc only; `["a","b"]` for the listed groups. |
 
 **Precedence: CLI flags > config file > defaults**
+
+## 🤝 Contributing
+
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ## 📄 License
 

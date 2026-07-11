@@ -1,5 +1,9 @@
 # Nest Swaggify
 
+[![CI](https://github.com/noah4520/nest-swaggify/actions/workflows/ci.yml/badge.svg)](https://github.com/noah4520/nest-swaggify/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/nest-swaggify)](https://www.npmjs.com/package/nest-swaggify)
+[![license](https://img.shields.io/github/license/noah4520/nest-swaggify)](LICENSE)
+
 [English](README.md) | **繁體中文**
 
 NestJS Swagger 擴充套件 — 用 decorator 將同一份 API 文件依群組輸出，支援 runtime 切換與產生靜態 JSON。
@@ -85,9 +89,9 @@ SWAGGER_GROUP=public-api npm start
 
 ### Decorators
 
-| Decorator                        | 行為                                                                                |
-| -------------------------------- | ----------------------------------------------------------------------------------- |
-| `@SwaggerInclude(...groups)`     | 將 endpoint 加入指定群組,**完整文件也會出現**(Controller + Method 群組合併)       |
+| Decorator                        | 行為                                                                             |
+| -------------------------------- | -------------------------------------------------------------------------------- |
+| `@SwaggerInclude(...groups)`     | 將 endpoint 加入指定群組,**完整文件也會出現**(Controller + Method 群組合併)      |
 | `@SwaggerIncludeOnly(...groups)` | 將 endpoint **只**保留在指定群組,**不出現在完整文件**;Method 層級覆寫 Controller |
 | `@SwaggerExclude()`              | 將 endpoint **從所有文件中隱藏**(包含完整文件)                                   |
 
@@ -164,17 +168,21 @@ const config: SwaggifyCliConfig = {
 export default config;
 ```
 
-| 參數          | 型別                 | 說明                 |
-| ------------- | -------------------- | -------------------- |
-| `appModule`   | `string`             | 應用模組路徑（必填） |
-| `output`      | `string`             | 輸出目錄             |
-| `title`       | `string`             | API 標題             |
-| `description` | `string`             | API 說明             |
-| `version`     | `string`             | API 版本             |
-| `baseUrl`     | `string \| string[]` | 基礎 URL             |
+| 參數          | 型別                 | 說明                                                                                                 |
+| ------------- | -------------------- | ---------------------------------------------------------------------------------------------------- |
+| `appModule`   | `string`             | 應用模組路徑（必填）                                                                                 |
+| `output`      | `string`             | 輸出目錄                                                                                             |
+| `title`       | `string`             | API 標題                                                                                             |
+| `description` | `string`             | API 說明                                                                                             |
+| `version`     | `string`             | API 版本                                                                                             |
+| `baseUrl`     | `string \| string[]` | 基礎 URL                                                                                             |
 | `group`       | `string[] \| "all"`  | 指定輸出群組；省略時產生完整文件與所有群組，`"all"` 則只產生完整文件，`["a","b"]` 則只產生指定的群組 |
 
 **優先順序：CLI 參數 > 設定檔 > 預設值**
+
+## 🤝 貢獻
+
+歡迎貢獻！請參考 [CONTRIBUTING.md](CONTRIBUTING.md) 了解開發環境設定與規範。
 
 ## 📄 授權
 
