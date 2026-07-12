@@ -95,6 +95,15 @@ SWAGGER_GROUP=public-api npm start
 | `@SwaggerIncludeOnly(...groups)` | 將 endpoint **只**保留在指定群組,**不出現在完整文件**;Method 層級覆寫 Controller |
 | `@SwaggerExclude()`              | 將 endpoint **從所有文件中隱藏**(包含完整文件)                                   |
 
+可見性一覽：
+
+| Endpoint 上的 decorator          | 完整文件（`all`） | 指定的群組 | 其他群組 |
+| -------------------------------- | :---------------: | :--------: | :------: |
+| _（未標記）_                     |        ✅         |     ❌     |    ❌    |
+| `@SwaggerInclude(...groups)`     |        ✅         |     ✅     |    ❌    |
+| `@SwaggerIncludeOnly(...groups)` |        ❌         |     ✅     |    ❌    |
+| `@SwaggerExclude()`              |        ❌         |     ❌     |    ❌    |
+
 Decorator 能掛在 Controller 或 Method 上。`@SwaggerInclude` 與 `@SwaggerIncludeOnly` 支援一次傳多個群組：
 
 ```typescript

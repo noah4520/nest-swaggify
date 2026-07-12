@@ -95,6 +95,15 @@ You can put it in `.env` so different environments serve different group docs. U
 | `@SwaggerIncludeOnly(...groups)` | Restricts the endpoint to the specified groups; **hidden from the full doc**; Method overrides Controller |
 | `@SwaggerExclude()`              | **Hides the endpoint from every doc** — full and group-specific                                           |
 
+Visibility at a glance:
+
+| Decorator on the endpoint        | Full doc (`all`) | Specified groups | Other groups |
+| -------------------------------- | :--------------: | :--------------: | :----------: |
+| _(none)_                         |        ✅        |        ❌        |      ❌      |
+| `@SwaggerInclude(...groups)`     |        ✅        |        ✅        |      ❌      |
+| `@SwaggerIncludeOnly(...groups)` |        ❌        |        ✅        |      ❌      |
+| `@SwaggerExclude()`              |        ❌        |        ❌        |      ❌      |
+
 Decorators apply at the Controller or Method level. `@SwaggerInclude` and `@SwaggerIncludeOnly` accept multiple groups in one call:
 
 ```typescript
