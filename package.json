@@ -1,6 +1,5 @@
 {
   "name": "nest-swaggify-workspace",
-  "version": "0.0.1",
   "private": true,
   "description": "NestJS Group-based Swagger documentation generator",
   "license": "MIT",

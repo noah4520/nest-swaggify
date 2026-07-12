@@ -1,6 +1,6 @@
 {
   "name": "nest-swaggify",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "NestJS Swagger groups - Group-based Swagger documentation generator",
   "keywords": [
     "documentation",
