@@ -1,8 +1,23 @@
-# Nest Swaggify
+<p align="center">
+  <img
+    src="https://raw.githubusercontent.com/noah4520/nest-swaggify/main/assets/logo.png"
+    alt="Nest Swaggify logo"
+    width="200"
+  />
+</p>
 
-[![CI](https://github.com/noah4520/nest-swaggify/actions/workflows/ci.yml/badge.svg)](https://github.com/noah4520/nest-swaggify/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/nest-swaggify)](https://www.npmjs.com/package/nest-swaggify)
-[![license](https://img.shields.io/github/license/noah4520/nest-swaggify)](LICENSE)
+<br/>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/nest-swaggify"><img src="https://img.shields.io/npm/v/nest-swaggify.svg" alt="npm package"></a>
+  <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/nest-swaggify.svg" alt="node compatibility"></a>
+  <a href="https://github.com/noah4520/nest-swaggify/actions/workflows/ci.yml"><img src="https://github.com/noah4520/nest-swaggify/actions/workflows/ci.yml/badge.svg?branch=main" alt="build status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/noah4520/nest-swaggify.svg" alt="license"></a>
+</p>
+
+<br/>
+
+# Nest Swaggify
 
 [English](README.md) | **繁體中文**
 
